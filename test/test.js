@@ -59,7 +59,7 @@ describe( 'factory', function() {
       classMembers: { type: 'M8' }
     } ).getComposed();
 
-    var factories = [ f1, f2, f3 ];
+    var factories = [ f1, f2, f3, F1, F2, F3 ];
 
     factories.forEach( function( factory ) {
       factory.register( M1 );
@@ -94,7 +94,78 @@ describe( 'factory', function() {
       expect( m6.xy() ).to.be.eql( 180 );
       expect( m7.xy() ).to.be.eql( 210 );
       expect( m8.xy() ).to.be.eql( 240 );
+      console.log( m7.toJSON() );
+
     } );
+  } );
+
+  it( 'factory hierarchy', function() {
+    var factory = require( 'factory' );
+    var F0 = factory().standalone;
+    var f0 = new F0();
+
+    var F1 = composable()
+      .use( factory() )
+      .use( {
+        instanceMembers: {
+          xy: function() { return ( this.x + this.y ) * 1; }
+        },
+        classMembers: { type: 'F1' }
+      } )
+      .getComposed();
+
+    var F2 = composable()
+      .use( factory() )
+      .use( {
+        instanceMembers: {
+          xy: function() { return ( this.x + this.y ) * 2; }
+        },
+        classMembers: { type: 'F2' }
+      } )
+      .getComposed();
+
+    var F3 = composable()
+      .use( factory() )
+      .use( {
+        instanceMembers: {
+          xy: function() { return ( this.x + this.y ) * 3; }
+        },
+        classMembers: { type: 'F3' }
+      } )
+      .getComposed();
+
+    var F4 = composable()
+      .use( factory() )
+      .use( {
+        instanceMembers: {
+          xy: function() { return ( this.x + this.y ) * 4; }
+        },
+        classMembers: { type: 'F4' }
+      } )
+      .getComposed();
+
+    F0.register( F1 );
+    F1.register( F2 );
+    F1.register( F3 );
+    F3.register( F4 );
+
+    var o1 = F0.createObject( { _type: 'F1', x: 10, y: 20 } );
+    var o2 = F0.createObject( { _type: 'F1.F2', x: 10, y: 20 } );
+    var o3 = F0.createObject( { _type: 'F1.F3', x: 10, y: 20 } );
+    var o4 = F0.createObject( { _type: 'F1.F3.F4', x: 10, y: 20 } );
+
+    expect( o1.xy() ).to.be.eql( 30 );
+    expect( o2.xy() ).to.be.eql( 60 );
+    expect( o3.xy() ).to.be.eql( 90 );
+    expect( o4.xy() ).to.be.eql( 120 );
+
+    expect( F0.getAvailableClasses() ).to.be.eql( [
+      'F1',
+      'F1.F2',
+      'F1.F3',
+      'F1.F3.F4'
+    ] );
+
   } );
 
 } );
