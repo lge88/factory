@@ -1,0 +1,18 @@
+{
+  "name": "factory",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/lge88/factory.git"
+  },
+  "dependencies": {
+    "extend": "git+https://github.com/lge88/extend.git",
+    "composable": "git+https://github.com/lge88/composable.git",
+    "flatten": "git+https://github.com/lge88/flatten.git"
+  },
+  "devDependencies": {
+    "expect.js": "*",
+    "backbone": "~1.0.0"
+  },
+  "main": "lib/index.js"
+}
