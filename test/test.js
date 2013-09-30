@@ -85,6 +85,7 @@ describe( 'factory', function() {
       var m6 = factory.createObject( { _type: 'M6', x: 10, y: 20 } );
       var m7 = factory.createObject( { _type: 'M7', x: 10, y: 20 } );
       var m8 = factory.createObject( { _type: 'M8', x: 10, y: 20 } );
+      var m9 = factory.createObject( m8 );
 
       expect( m1.xy() ).to.be.eql( 30 );
       expect( m2.xy() ).to.be.eql( 60 );
@@ -94,6 +95,7 @@ describe( 'factory', function() {
       expect( m6.xy() ).to.be.eql( 180 );
       expect( m7.xy() ).to.be.eql( 210 );
       expect( m8.xy() ).to.be.eql( 240 );
+      expect( m8 ).to.be( m9 );
       console.log( m7.toJSON() );
 
     } );
